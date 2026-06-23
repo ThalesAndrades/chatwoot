@@ -32,7 +32,7 @@ Puma's total concurrency is **`WEB_CONCURRENCY` (workers) × `RAILS_MAX_THREADS`
 (`config/puma.rb`). Because MRI Ruby has a GIL, **5 threads per worker is the sweet spot**;
 add throughput with *workers*, not more threads.
 
-```
+```bash
 WEB_CONCURRENCY   = number of vCPUs      # 2 vCPU -> 2 workers
 RAILS_MAX_THREADS = 5                     # also sets the web DB connection pool
 ```
@@ -43,7 +43,7 @@ worker costs far less RAM than a full process. Start at `WEB_CONCURRENCY=2` on a
 
 ## 2. Background jobs (Sidekiq)
 
-```
+```bash
 SIDEKIQ_CONCURRENCY = 10    # default; this ALSO sets the worker's DB pool
 ```
 
@@ -86,7 +86,7 @@ sustained load. One small Redis instance comfortably serves cache + Sidekiq + pr
 
 ## 7. Ruby runtime (free wins)
 
-```
+```bash
 RUBY_YJIT_ENABLE=1     # YJIT JIT compiler on Ruby 3.4 — pure speed, no cost
 MALLOC_ARENA_MAX=2     # reduces glibc memory fragmentation — lower RAM = smaller box
 ```
