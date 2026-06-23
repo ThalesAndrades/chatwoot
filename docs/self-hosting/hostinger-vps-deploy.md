@@ -14,8 +14,10 @@ data showcasing every feature — on a **Hostinger VPS** using the bundled
 
 ## 0. Prerequisites
 - A **Hostinger VPS** (KVM 2 or larger recommended: 2 vCPU / 4 GB+), Ubuntu 22.04/24.04.
-- A **domain/subdomain** (e.g. `chat.yourdomain.com`) with an **A record** pointing to the
-  VPS IP. (Manage DNS in hPanel → Domains.)
+- A public hostname for the VPS. The simplest option is the **Hostinger provisional domain**
+  (`srvXXXXXX.hstgr.cloud`, shown in hPanel → VPS → Overview) — it resolves publicly, so HTTPS
+  works out of the box. A custom subdomain (e.g. `chat.yourdomain.com` with an A record to the
+  VPS IP) also works. Avoid using the bare IP — Let's Encrypt can't issue a certificate for it.
 - SSH access to the VPS.
 
 ## 1. Install Docker
@@ -83,8 +85,8 @@ The Rails service listens on `127.0.0.1:3000` (loopback only) — finish with a 
 The compose binds Rails to localhost, so put a TLS-terminating proxy in front. Caddy gets you a
 free auto-renewing certificate in one file:
 ```bash
-# /root/Caddyfile
-chat.yourdomain.com {
+# /root/Caddyfile  — use the same host as FRONTEND_URL (e.g. your Hostinger provisional domain)
+srvXXXXXX.hstgr.cloud {
     reverse_proxy 127.0.0.1:3000
 }
 ```
@@ -96,7 +98,7 @@ docker run -d --name caddy --network host \
 Keep `FORCE_SSL=true` in `.env` (TLS is terminated by Caddy).
 
 ## 9. Log in
-Open **`https://chat.yourdomain.com`** and sign in with your `DEMO_ADMIN_EMAIL` /
+Open your `FRONTEND_URL` (e.g. **`https://srvXXXXXX.hstgr.cloud`**) and sign in with your `DEMO_ADMIN_EMAIL` /
 `DEMO_ADMIN_PASSWORD`. The same user can open the instance-wide **Super Admin** panel at
 `/super_admin`.
 
